@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigQChatServer", "BigQChatServer\BigQChatServer.csproj", "{FD061363-0D1A-4A19-AE3C-D9BCD155BE05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigQChatClient", "BigQChatClient\BigQChatClient.csproj", "{CC52D420-FF1E-45D4-A2A9-26FE0275D6BD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD061363-0D1A-4A19-AE3C-D9BCD155BE05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD061363-0D1A-4A19-AE3C-D9BCD155BE05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD061363-0D1A-4A19-AE3C-D9BCD155BE05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD061363-0D1A-4A19-AE3C-D9BCD155BE05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC52D420-FF1E-45D4-A2A9-26FE0275D6BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC52D420-FF1E-45D4-A2A9-26FE0275D6BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC52D420-FF1E-45D4-A2A9-26FE0275D6BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC52D420-FF1E-45D4-A2A9-26FE0275D6BD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
