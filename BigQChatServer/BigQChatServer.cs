@@ -14,7 +14,7 @@ namespace BigQChat
 
         static void Main(string[] args)
         {
-            server = new BigQServer(null, port, false, false, false, true, true);
+            server = new BigQServer(null, port, false, true, false, true, true);
 
             server.MessageReceived = MessageReceived;
             server.ServerStopped = ServerStopped;

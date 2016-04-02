@@ -80,7 +80,7 @@ namespace BigQChatClient
 
             try
             {
-                client = new BigQClient(name, name, server, port, 5000, false);
+                client = new BigQClient(name, name, server, port, 20000, false);
             }
             catch (Exception e)
             {
