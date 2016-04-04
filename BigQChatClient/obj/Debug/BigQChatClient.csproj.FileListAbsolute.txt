@@ -8,3 +8,4 @@ D:\Code\Misc\BigQChat\BigQChatClient\bin\Debug\System.Data.Portable.dll
 D:\Code\Misc\BigQChat\BigQChatClient\bin\Debug\System.Transactions.Portable.dll
 D:\Code\Misc\BigQChat\BigQChatClient\obj\Debug\BigQChatClient.exe
 D:\Code\Misc\BigQChat\BigQChatClient\obj\Debug\BigQChatClient.pdb
+D:\code\Misc\BigQChat\BigQChatClient\obj\Debug\BigQChatClient.csprojResolveAssemblyReference.cache

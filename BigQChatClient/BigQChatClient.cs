@@ -186,10 +186,12 @@ namespace BigQChatClient
                                 }
                                 else
                                 {
+                                    List<BigQClient> deduped = users.Distinct().ToList();
+
                                     Console.WriteLine("Connected users:");
-                                    foreach (BigQClient curr in users)
+                                    foreach (BigQClient curr in deduped)
                                     {
-                                        Console.WriteLine("  " + curr.ClientGuid + "  [" + curr.SourceIp + ":" + curr.SourcePort + "]");
+                                        Console.WriteLine("  " + curr.ClientGuid);
                                     }
                                 }
                             }
@@ -207,6 +209,7 @@ namespace BigQChatClient
         {
             if (msg == null) return false;
             if (msg.Data == null) return false;
+
             Console.WriteLine(msg.SenderGuid + " -> " + msg.RecipientGuid + ": " + msg.Data.ToString());
             return true;
         }
