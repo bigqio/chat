@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using BigQ;
 
@@ -232,7 +233,31 @@ namespace BigQChatClient
             Console.WriteLine("***");
             Console.WriteLine("*** Disconnected, attempting to reconnect ***");
             Console.WriteLine("***");
-            client = new BigQClient(name, name, server, port, 5000, false);
+
+            try
+            {
+                client = new BigQClient(name, name, server, port, 5000, false);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unable to reconnect to " + server + ":" + port + ": " + e.Message);
+                Console.WriteLine("Retrying in five seconds");
+
+                client = null;
+                Thread.Sleep(5000);
+                return ServerDisconnected();                
+            }
+
+            BigQMessage response;
+            if (!client.Login(out response))
+            {
+                Console.WriteLine("Unable to re-login, retrying in five seconds");
+
+                client = null;
+                Thread.Sleep(5000);
+                return ServerDisconnected();
+            }
+
             return true;
         }
 
