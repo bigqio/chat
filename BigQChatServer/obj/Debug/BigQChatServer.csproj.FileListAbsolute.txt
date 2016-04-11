@@ -3,10 +3,9 @@ D:\Code\Misc\BigQChat\BigQChatServer\bin\Debug\BigQChatServer.exe.config
 D:\Code\Misc\BigQChat\BigQChatServer\bin\Debug\BigQChatServer.exe
 D:\Code\Misc\BigQChat\BigQChatServer\bin\Debug\BigQChatServer.pdb
 D:\Code\Misc\BigQChat\BigQChatServer\bin\Debug\BigQ.dll
-D:\Code\Misc\BigQChat\BigQChatServer\bin\Debug\Mono.Data.Sqlite.dll
 D:\Code\Misc\BigQChat\BigQChatServer\bin\Debug\Newtonsoft.Json.dll
-D:\Code\Misc\BigQChat\BigQChatServer\bin\Debug\System.Data.Portable.dll
-D:\Code\Misc\BigQChat\BigQChatServer\bin\Debug\System.Transactions.Portable.dll
 D:\Code\Misc\BigQChat\BigQChatServer\obj\Debug\BigQChatServer.exe
 D:\Code\Misc\BigQChat\BigQChatServer\obj\Debug\BigQChatServer.pdb
 D:\Code\Misc\BigQChat\BigQChatServer\obj\Debug\BigQChatServer.csprojResolveAssemblyReference.cache
+D:\Code\Misc\BigQChat\BigQChatServer\bin\Debug\System.Data.Portable.dll
+D:\Code\Misc\BigQChat\BigQChatServer\bin\Debug\System.Transactions.Portable.dll

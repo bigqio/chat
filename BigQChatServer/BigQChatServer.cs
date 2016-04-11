@@ -14,7 +14,7 @@ namespace BigQChat
 
         static void Main(string[] args)
         {
-            server = new BigQServer(null, port, false, true, false, true, true);
+            server = new BigQServer(null, port, true, false, true, true);
 
             server.MessageReceived = MessageReceived;
             server.ServerStopped = ServerStopped;
@@ -63,7 +63,7 @@ namespace BigQChat
             Console.WriteLine("*** Server stopped, attempting to restart ***");
             Console.WriteLine("***");
 
-            server = new BigQServer(null, 8000, false, false, true, true, true);
+            server = new BigQServer(null, 8000, false, true, true, true);
             return true;
         }
 
