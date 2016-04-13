@@ -11,10 +11,11 @@ namespace BigQChat
     {
         static int port = 8222;
         static BigQServer server;
+        const bool DEBUG = false;
 
         static void Main(string[] args)
         {
-            server = new BigQServer(null, port, true, false, true, true);
+            server = new BigQServer(null, port, DEBUG, false, true, true, 0);
 
             server.MessageReceived = MessageReceived;
             server.ServerStopped = ServerStopped;
@@ -62,7 +63,8 @@ namespace BigQChat
                         Console.WriteLine("Menu");
                         Console.WriteLine("  q      quit");
                         Console.WriteLine("  cls    clear screen");
-                        Console.WriteLine("  list   list connections");
+                        Console.WriteLine("  who    list connected users");
+                        Console.WriteLine("  count  show server connection count");
                         Console.WriteLine("");
                         break;
 
@@ -71,7 +73,7 @@ namespace BigQChat
                         Console.Clear();
                         break;
 
-                    case "list":
+                    case "who":
                         clients = server.ListClients();
                         if (clients == null) Console.WriteLine("(null)");
                         else if (clients.Count < 1) Console.WriteLine("(empty)");
@@ -83,6 +85,10 @@ namespace BigQChat
                                 Console.WriteLine("  " + curr.IpPort() + "  " + curr.ClientGuid + "  " + curr.Email);
                             }
                         }
+                        break;
+
+                    case "count":
+                        Console.WriteLine("Server connection count: " + server.ConnectionCount());
                         break;
 
                     case "q":
@@ -106,11 +112,15 @@ namespace BigQChat
         static bool ServerStopped()
         {
             // restart
-            Console.WriteLine("***");
             Console.WriteLine("*** Server stopped, attempting to restart ***");
-            Console.WriteLine("***");
-
-            server = new BigQServer(null, 8000, false, true, true, true);
+            
+            server = new BigQServer(null, 8000, DEBUG, true, true, true, 0);
+            server.MessageReceived = MessageReceived;
+            server.ServerStopped = ServerStopped;
+            server.ClientConnected = ClientConnected;
+            server.ClientLogin = ClientLogin;
+            server.ClientDisconnected = ClientDisconnected;
+            // server.LogMessage = LogMessage;
             return true;
         }
 

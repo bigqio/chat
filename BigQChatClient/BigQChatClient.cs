@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,6 +18,7 @@ namespace BigQChatClient
         static BigQClient client;
         static BigQMessage response;
         static List<BigQClient> users;
+        const bool DEBUG = false;
 
         static void Main(string[] args)
         {
@@ -42,18 +45,20 @@ namespace BigQChatClient
             Console.WriteLine("BigQ Chat Client");
             Console.WriteLine("");
             
-            while (true)
-            {
-                Console.Write("Server IP or hostname: ");
-                server = Console.ReadLine();
-                if (String.IsNullOrEmpty(server)) continue;
-                break;
-            }
+            Console.Write("Server IP or hostname [ENTER for chat.bigq.io]: ");
+            server = Console.ReadLine();
+            if (String.IsNullOrEmpty(server)) server = "chat.bigq.io";
 
             while (true)
             {
-                Console.Write("Port number: ");
+                Console.Write("Port number [ENTER for 8222]: ");
                 string portString = Console.ReadLine();
+                if (String.IsNullOrEmpty(portString))
+                {
+                    port = 8222;
+                    break;
+                }
+
                 if (!Int32.TryParse(portString, out port))
                 {
                     Console.WriteLine("Positive numbers only, please");
@@ -77,42 +82,21 @@ namespace BigQChatClient
                 break;
             }
 
-            Console.WriteLine("Attempting connection to server: " + server + ":" + port);
-
-            try
-            {
-                client = new BigQClient(name, name, server, port, 20000, false);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception while connecting: " + e.Message);
-                return;
-            }
-
-            client.AsyncMessageReceived = AsyncMessageReceived;
-            client.SyncMessageReceived = SyncMessageReceived;
-            client.ServerDisconnected = ServerDisconnected;
-
-            Console.WriteLine("Attempting login to server: " + server + ":" + port);
-            if (!client.Login(out response))
-            {
-                Console.WriteLine("*** Unable to login to server, exiting");
-                return;
-            }
-            else
-            {
-                Console.WriteLine("Login successful");
-            }
+            ConnectToServer();
 
             bool runForever = true;
             while (runForever)
             {
+                if (client == null) Console.Write("[OFFLINE] ");
                 Console.Write("Command [? for help]: ");
+
                 string input = Console.ReadLine();
                 if (String.IsNullOrEmpty(input)) continue;
                 
                 if (input.StartsWith("/"))
                 {
+                    if (client == null) continue;
+
                     string msg = input.Substring(1);
                     string recipient = "";
                     string recipientMessage = "";
@@ -161,8 +145,10 @@ namespace BigQChatClient
                     {
                         case "?":
                             Console.WriteLine("");
-                            Console.WriteLine("Menu");
+                            Console.WriteLine("Available Commands:");
                             Console.WriteLine("  q                  quit");
+                            Console.WriteLine("  cls                clear the screen");
+                            Console.WriteLine("  whoami             show my TCP endpoint");
                             Console.WriteLine("  who                list all connected users");
                             Console.WriteLine("  /(handle) (msg)    send message (msg) to user with handle (handle)");
                             Console.WriteLine("                     leave parentheses off for both handle and message data");
@@ -174,7 +160,32 @@ namespace BigQChatClient
                             runForever = false;
                             break;
 
+                        case "c":
+                        case "cls":
+                            Console.Clear();
+                            break;
+
+                        case "login":
+                            if (client == null) break;
+                            if (!client.Login(out response))
+                            {
+                                Console.WriteLine("*** Login failed");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Login succeeded");
+                            }
+                            break;
+
+                        case "whoami":
+                            if (client == null) break;
+                            Console.Write(client.IpPort());
+                            if (!String.IsNullOrEmpty(client.ClientGuid)) Console.WriteLine("  GUID " + client.ClientGuid);
+                            else Console.WriteLine("[not logged in]");
+                            break;
+
                         case "who":
+                            if (client == null) break;
                             if (!client.ListClients(out response, out users))
                             {
                                 Console.WriteLine("*** Unable to retrieve user list");
@@ -228,43 +239,72 @@ namespace BigQChatClient
             return resp;
         }
 
-        static bool ServerDisconnected()
+        static bool ConnectToServer()
         {
-            Console.WriteLine("***");
-            Console.WriteLine("*** Disconnected, attempting to reconnect ***");
-            Console.WriteLine("***");
-
             try
             {
-                client = new BigQClient(name, name, server, port, 5000, false);
+                Console.WriteLine("Attempting to connect to " + server + ":" + port);
+                if (client != null) client.Close();
+                client = null;
+                client = new BigQClient(name, name, server, port, 5000, 0, DEBUG);
+
+                client.AsyncMessageReceived = AsyncMessageReceived;
+                client.SyncMessageReceived = SyncMessageReceived;
+                client.ServerDisconnected = ConnectToServer;
+                // client.LogMessage = LogMessage;
+
+                BigQMessage response;
+                if (!client.Login(out response))
+                {
+                    Console.WriteLine("Unable to login, retrying in five seconds");
+                    Thread.Sleep(5000);
+                    return ConnectToServer();
+                }
+
+                Console.WriteLine("Successfully connected to " + server + ":" + port);
+                return true;
+            }
+            catch (SocketException)
+            {
+                Console.WriteLine("*** Unable to connect to " + server + ":" + port + " (port not reachable)");
+                Console.WriteLine("*** Retrying in five seconds");
+                Thread.Sleep(5000);
+                return ConnectToServer();
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine("*** Timeout connecting to " + server + ":" + port);
+                Console.WriteLine("*** Retrying in five seconds");
+                Thread.Sleep(5000);
+                return ConnectToServer();
             }
             catch (Exception e)
             {
-                Console.WriteLine("Unable to reconnect to " + server + ":" + port + ": " + e.Message);
-                Console.WriteLine("Retrying in five seconds");
-
-                client = null;
+                Console.WriteLine("*** Unable to connect to " + server + ":" + port + " due to the following exception:");
+                PrintException("ConnectToServer", e);
+                Console.WriteLine("*** Retrying in five seconds");
                 Thread.Sleep(5000);
-                return ServerDisconnected();                
+                return ConnectToServer();                
             }
-
-            BigQMessage response;
-            if (!client.Login(out response))
-            {
-                Console.WriteLine("Unable to re-login, retrying in five seconds");
-
-                client = null;
-                Thread.Sleep(5000);
-                return ServerDisconnected();
-            }
-
-            return true;
         }
 
         static bool LogMessage(string msg)
         {
             Console.WriteLine("BigQClient message: " + msg);
             return true;
+        }
+
+        static void PrintException(string method, Exception e)
+        {
+            Console.WriteLine("================================================================================");
+            Console.WriteLine(" = Method: " + method);
+            Console.WriteLine(" = Exception Type: " + e.GetType().ToString());
+            Console.WriteLine(" = Exception Data: " + e.Data);
+            Console.WriteLine(" = Inner Exception: " + e.InnerException);
+            Console.WriteLine(" = Exception Message: " + e.Message);
+            Console.WriteLine(" = Exception Source: " + e.Source);
+            Console.WriteLine(" = Exception StackTrace: " + e.StackTrace);
+            Console.WriteLine("================================================================================");
         }
     }
 }
