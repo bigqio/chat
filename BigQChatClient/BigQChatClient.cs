@@ -12,14 +12,15 @@ namespace BigQChatClient
 {
     class BigQChatClient
     {
-        static int port;
-        static string server;
+        static int port = 8222;
+        static string server = "chat.bigq.io";
         static string name = "";
         static BigQClient client;
         static BigQMessage response;
         static List<BigQClient> users;
-        const bool DEBUG = false;
-
+        static int heartbeat = 0;
+        static bool debug = false;
+        
         static void Main(string[] args)
         {
             Console.Clear();
@@ -44,43 +45,51 @@ namespace BigQChatClient
             Console.WriteLine("");
             Console.WriteLine("BigQ Chat Client");
             Console.WriteLine("");
-            
-            Console.Write("Server IP or hostname [ENTER for chat.bigq.io]: ");
-            server = Console.ReadLine();
-            if (String.IsNullOrEmpty(server)) server = "chat.bigq.io";
 
-            while (true)
+            if (GetArguments(args, out server, out port, out name, out heartbeat, out debug))
             {
-                Console.Write("Port number [ENTER for 8222]: ");
-                string portString = Console.ReadLine();
-                if (String.IsNullOrEmpty(portString))
+                Console.WriteLine("Using server " + server + ":" + port + " as user " + name + " (heartbeat " + heartbeat + ", debug " + debug + ")");
+            }
+            else
+            {
+                Console.Write("Server IP or hostname [ENTER for chat.bigq.io]: ");
+                server = Console.ReadLine();
+                if (String.IsNullOrEmpty(server)) server = "chat.bigq.io";
+
+                while (true)
                 {
-                    port = 8222;
+                    Console.Write("Port number [ENTER for 8222]: ");
+                    string portString = Console.ReadLine();
+                    if (String.IsNullOrEmpty(portString))
+                    {
+                        port = 8222;
+                        break;
+                    }
+
+                    if (!Int32.TryParse(portString, out port))
+                    {
+                        Console.WriteLine("Positive numbers only, please");
+                        continue;
+                    }
+
+                    if (port < 1)
+                    {
+                        Console.WriteLine("Positive numbers only, please");
+                        continue;
+                    }
+
                     break;
                 }
-
-                if (!Int32.TryParse(portString, out port))
+           
+                while (true)
                 {
-                    Console.WriteLine("Positive numbers only, please");
-                    continue;
+                    Console.Write("Nickname [no spaces please]: ");
+                    name = Console.ReadLine();
+                    if (String.IsNullOrEmpty(name)) continue;
+                    break;
                 }
-
-                if (port < 1)
-                {
-                    Console.WriteLine("Positive numbers only, please");
-                    continue;
-                }
-
-                break;
             }
 
-            while (true)
-            {
-                Console.Write("Nickname [no spaces please]: ");
-                name = Console.ReadLine();
-                if (String.IsNullOrEmpty(name)) continue;
-                break;
-            }
 
             ConnectToServer();
 
@@ -222,21 +231,22 @@ namespace BigQChatClient
             if (msg == null) return false;
             if (msg.Data == null) return false;
 
-            Console.WriteLine(msg.SenderGuid + " -> " + msg.RecipientGuid + ": " + msg.Data.ToString());
+            Console.WriteLine(msg.SenderGuid + " -> " + msg.RecipientGuid + ": " + Encoding.UTF8.GetString(msg.Data));
             return true;
         }
 
-        static object SyncMessageReceived(BigQMessage msg)
+        static byte[] SyncMessageReceived(BigQMessage msg)
         {
             if (msg == null) return null;
             if (msg.Data == null) return null;
 
             Console.WriteLine("Received synchronous message from " + msg.SenderGuid);
-            Console.WriteLine(msg.Data.ToString());
+            Console.WriteLine(Encoding.UTF8.GetString(msg.Data));
             Console.WriteLine("Press ENTER to take control of the console and then type your response");
             Console.Write("Response [ENTER for 'received!']: ");
             string resp = Console.ReadLine();
-            return resp;
+            if (String.IsNullOrEmpty(resp)) return null;
+            return Encoding.UTF8.GetBytes(resp);
         }
 
         static bool ConnectToServer()
@@ -246,7 +256,7 @@ namespace BigQChatClient
                 Console.WriteLine("Attempting to connect to " + server + ":" + port);
                 if (client != null) client.Close();
                 client = null;
-                client = new BigQClient(name, name, server, port, 5000, 0, DEBUG);
+                client = new BigQClient(name, name, server, port, 10000, heartbeat, debug);
 
                 client.AsyncMessageReceived = AsyncMessageReceived;
                 client.SyncMessageReceived = SyncMessageReceived;
@@ -305,6 +315,53 @@ namespace BigQChatClient
             Console.WriteLine(" = Exception Source: " + e.Source);
             Console.WriteLine(" = Exception StackTrace: " + e.StackTrace);
             Console.WriteLine("================================================================================");
+        }
+
+        static bool GetArguments(string[] args, out string host, out int port, out string name, out int heartbeat, out bool debug)
+        {
+            host = null;
+            port = 0;
+            name = null;
+            heartbeat = 0;
+            debug = false;
+
+            if (args == null || args.Length != 5) return false;
+
+            host = args[0];
+
+            try
+            {
+                port = Convert.ToInt32(args[1]);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Invalid port number specified on command line");
+                return false;
+            }
+
+            name = args[2];
+
+            try
+            {
+                heartbeat = Convert.ToInt32(args[3]);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Invalid heartbeat interval specified on command line");
+                return false;
+            }
+
+            try
+            {
+                debug = Convert.ToBoolean(args[4]);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Invalid value for debug");
+                return false;
+            }
+
+            return true;            
         }
     }
 }

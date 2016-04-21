@@ -10,19 +10,12 @@ namespace BigQChat
     class BigQChatServer
     {
         static int port = 8222;
+        static int heartbeat = 0;
+        static bool debug = false;
         static BigQServer server;
-        const bool DEBUG = false;
-
+        
         static void Main(string[] args)
         {
-            server = new BigQServer(null, port, DEBUG, false, true, true, 0);
-
-            server.MessageReceived = MessageReceived;
-            server.ServerStopped = ServerStopped;
-            server.ClientConnected = ClientConnected;
-            server.ClientLogin = ClientLogin;
-            server.ClientDisconnected = ClientDisconnected;
-
             Console.Clear();
             Console.WriteLine("");
             Console.WriteLine("");
@@ -44,8 +37,24 @@ namespace BigQChat
             Console.WriteLine("");
             Console.WriteLine("");
             Console.WriteLine("BigQ Chat Server");
-            Console.WriteLine("Listening on TCP/" + port);
             Console.WriteLine("");
+
+            if (!GetArguments(args, out port, out heartbeat, out debug))
+            {
+                port = 8222;
+                heartbeat = 0;
+                debug = false;
+            }
+
+            server = new BigQServer(null, port, debug, false, true, true, heartbeat);
+
+            server.MessageReceived = MessageReceived;
+            server.ServerStopped = ServerStopped;
+            server.ClientConnected = ClientConnected;
+            server.ClientLogin = ClientLogin;
+            server.ClientDisconnected = ClientDisconnected;
+
+            Console.WriteLine("Listening on TCP/" + port + " (heartbeat " + heartbeat + ", debug " + debug + ")");
 
             bool runForever = true;
             List<BigQClient> clients;
@@ -105,7 +114,7 @@ namespace BigQChat
 
         static bool MessageReceived(BigQMessage msg)
         {
-            Console.WriteLine(msg.SenderGuid + " -> " + msg.RecipientGuid + ": " + msg.Data.ToString());
+            Console.WriteLine(msg.SenderGuid + " -> " + msg.RecipientGuid + ": " + Encoding.UTF8.GetString(msg.Data));
             return true;
         }
 
@@ -114,7 +123,7 @@ namespace BigQChat
             // restart
             Console.WriteLine("*** Server stopped, attempting to restart ***");
             
-            server = new BigQServer(null, 8000, DEBUG, true, true, true, 0);
+            server = new BigQServer(null, 8000, debug, true, true, true, heartbeat);
             server.MessageReceived = MessageReceived;
             server.ServerStopped = ServerStopped;
             server.ClientConnected = ClientConnected;
@@ -148,6 +157,47 @@ namespace BigQChat
         static bool LogMessage(string msg)
         {
             Console.WriteLine("BigQServer message: " + msg);
+            return true;
+        }
+
+        static bool GetArguments(string[] args, out int port, out int heartbeat, out bool debug)
+        {
+            port = 0;
+            heartbeat = 0;
+            debug = false;
+
+            if (args == null || args.Length != 3) return false;
+
+            try
+            {
+                port = Convert.ToInt32(args[0]);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Invalid port number specified on command line");
+                return false;
+            }
+
+            try
+            {
+                heartbeat = Convert.ToInt32(args[1]);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Invalid heartbeat interval specified on command line");
+                return false;
+            }
+
+            try
+            {
+                debug = Convert.ToBoolean(args[2]);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Invalid value for debug");
+                return false;
+            }
+
             return true;
         }
     }
