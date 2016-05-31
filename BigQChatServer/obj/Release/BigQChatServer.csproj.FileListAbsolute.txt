@@ -9,8 +9,6 @@ D:\Code\Misc\BigQChat\BigQChatServer\obj\Release\BigQChatServer.pdb
 D:\Code\Misc\BigQChat\BigQChatServer\bin\Release\System.Data.Portable.dll
 D:\Code\Misc\BigQChat\BigQChatServer\bin\Release\System.Transactions.Portable.dll
 D:\Code\BigQ\BigQChat\BigQChatServer\bin\Release\BigQChatServer.exe.config
-D:\Code\BigQ\BigQChat\BigQChatServer\obj\Release\BigQChatServer.exe
-D:\Code\BigQ\BigQChat\BigQChatServer\obj\Release\BigQChatServer.pdb
 D:\Code\BigQ\BigQChat\BigQChatServer\bin\Release\BigQChatServer.exe
 D:\Code\BigQ\BigQChat\BigQChatServer\bin\Release\BigQChatServer.pdb
 D:\Code\BigQ\BigQChat\BigQChatServer\bin\Release\BigQ.dll
@@ -18,4 +16,16 @@ D:\Code\BigQ\BigQChat\BigQChatServer\bin\Release\Newtonsoft.Json.dll
 D:\Code\BigQ\BigQChat\BigQChatServer\bin\Release\System.Data.Portable.dll
 D:\Code\BigQ\BigQChat\BigQChatServer\bin\Release\System.Transactions.Portable.dll
 D:\Code\BigQ\BigQChat\BigQChatServer\bin\Release\BigQ.pdb
-D:\Code\BigQ\BigQChat\BigQChatServer\obj\Release\BigQChatServer.csprojResolveAssemblyReference.cache
+D:\Code\BigQ\BigQChat\BigQChatServer\obj\Release\BigQChatServer.exe
+D:\Code\BigQ\BigQChat\BigQChatServer\obj\Release\BigQChatServer.pdb
+D:\code\bigq\BigQChat-CSharp\BigQChatServer\bin\Release\BigQChatServer.exe.config
+D:\code\bigq\BigQChat-CSharp\BigQChatServer\bin\Release\BigQChatServer.exe
+D:\code\bigq\BigQChat-CSharp\BigQChatServer\bin\Release\BigQChatServer.pdb
+D:\code\bigq\BigQChat-CSharp\BigQChatServer\bin\Release\BigQ.dll
+D:\code\bigq\BigQChat-CSharp\BigQChatServer\bin\Release\Newtonsoft.Json.dll
+D:\code\bigq\BigQChat-CSharp\BigQChatServer\bin\Release\System.Data.Portable.dll
+D:\code\bigq\BigQChat-CSharp\BigQChatServer\bin\Release\System.Transactions.Portable.dll
+D:\code\bigq\BigQChat-CSharp\BigQChatServer\bin\Release\BigQ.pdb
+D:\code\bigq\BigQChat-CSharp\BigQChatServer\obj\Release\BigQChatServer.csprojResolveAssemblyReference.cache
+D:\code\bigq\BigQChat-CSharp\BigQChatServer\obj\Release\BigQChatServer.exe
+D:\code\bigq\BigQChat-CSharp\BigQChatServer\obj\Release\BigQChatServer.pdb
