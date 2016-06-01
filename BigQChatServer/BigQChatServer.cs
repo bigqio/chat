@@ -46,7 +46,7 @@ namespace BigQChat
                 debug = false;
             }
 
-            server = new BigQServer(null, port, debug, false, true, true, heartbeat);
+            server = new BigQServer(null, port, null, 8223, debug, false, true, true, heartbeat);
 
             server.MessageReceived = MessageReceived;
             server.ServerStopped = ServerStopped;
@@ -123,7 +123,7 @@ namespace BigQChat
             // restart
             Console.WriteLine("*** Server stopped, attempting to restart ***");
             
-            server = new BigQServer(null, 8000, debug, true, true, true, heartbeat);
+            server = new BigQServer(null, port, null, 8223, debug, true, true, true, heartbeat);
             server.MessageReceived = MessageReceived;
             server.ServerStopped = ServerStopped;
             server.ClientConnected = ClientConnected;

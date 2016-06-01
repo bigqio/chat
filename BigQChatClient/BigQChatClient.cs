@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -251,27 +252,42 @@ namespace BigQChatClient
 
         static bool ConnectToServer()
         {
+            Stopwatch connectSw = new Stopwatch();
+            long connectSwMs = 0;
+            Stopwatch loginSw = new Stopwatch();
+            long loginSwMs = 0;
+
             try
             {
                 Console.WriteLine("Attempting to connect to " + server + ":" + port);
                 if (client != null) client.Close();
                 client = null;
+
+                connectSw.Start();
                 client = new BigQClient(name, name, server, port, 10000, heartbeat, debug);
+                connectSw.Stop();
+                connectSwMs = connectSw.ElapsedMilliseconds;
 
                 client.AsyncMessageReceived = AsyncMessageReceived;
                 client.SyncMessageReceived = SyncMessageReceived;
                 client.ServerDisconnected = ConnectToServer;
                 // client.LogMessage = LogMessage;
+                Console.WriteLine("Successfully connected to " + server + ":" + port + " (" + connectSwMs + "ms)");
 
+                Console.WriteLine("Attempting login to " + server + ":" + port);
                 BigQMessage response;
+
+                loginSw.Start();
                 if (!client.Login(out response))
                 {
                     Console.WriteLine("Unable to login, retrying in five seconds");
                     Thread.Sleep(5000);
                     return ConnectToServer();
                 }
+                loginSw.Stop();
+                loginSwMs = loginSw.ElapsedMilliseconds;
 
-                Console.WriteLine("Successfully connected to " + server + ":" + port);
+                Console.WriteLine("Successfully logged into " + server + ":" + port + " (" + loginSwMs + "ms)");
                 return true;
             }
             catch (SocketException)

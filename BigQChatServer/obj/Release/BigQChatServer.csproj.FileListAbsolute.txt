@@ -29,3 +29,13 @@ D:\code\bigq\BigQChat-CSharp\BigQChatServer\bin\Release\BigQ.pdb
 D:\code\bigq\BigQChat-CSharp\BigQChatServer\obj\Release\BigQChatServer.csprojResolveAssemblyReference.cache
 D:\code\bigq\BigQChat-CSharp\BigQChatServer\obj\Release\BigQChatServer.exe
 D:\code\bigq\BigQChat-CSharp\BigQChatServer\obj\Release\BigQChatServer.pdb
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Release\BigQChatServer.exe.config
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Release\BigQChatServer.exe
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Release\BigQChatServer.pdb
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Release\BigQ.dll
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Release\Newtonsoft.Json.dll
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Release\BigQ.pdb
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Release\Newtonsoft.Json.xml
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\obj\Release\BigQChatServer.csprojResolveAssemblyReference.cache
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\obj\Release\BigQChatServer.exe
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\obj\Release\BigQChatServer.pdb

@@ -20,3 +20,13 @@ D:\Code\BigQ\BigQChat\BigQChatServer\bin\Debug\System.Transactions.Portable.dll
 D:\Code\BigQ\BigQChat\BigQChatServer\bin\Debug\BigQ.pdb
 D:\Code\BigQ\BigQChat\BigQChatServer\obj\Debug\BigQChatServer.exe
 D:\Code\BigQ\BigQChat\BigQChatServer\obj\Debug\BigQChatServer.pdb
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Debug\BigQChatServer.exe.config
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Debug\BigQChatServer.exe
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Debug\BigQChatServer.pdb
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Debug\BigQ.dll
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Debug\Newtonsoft.Json.dll
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Debug\BigQ.pdb
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\bin\Debug\Newtonsoft.Json.xml
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\obj\Debug\BigQChatServer.csprojResolveAssemblyReference.cache
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\obj\Debug\BigQChatServer.exe
+D:\code\bigq\BigQChat-CSharp-perf\BigQChatServer\obj\Debug\BigQChatServer.pdb
