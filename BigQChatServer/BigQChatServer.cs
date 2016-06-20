@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using BigQ;
 
@@ -46,18 +47,12 @@ namespace BigQChat
                 debug = false;
             }
 
-            server = new BigQServer(null, port, null, 8223, debug, false, true, true, heartbeat);
-
-            server.MessageReceived = MessageReceived;
-            server.ServerStopped = ServerStopped;
-            server.ClientConnected = ClientConnected;
-            server.ClientLogin = ClientLogin;
-            server.ClientDisconnected = ClientDisconnected;
-
-            Console.WriteLine("Listening on TCP/" + port + " (heartbeat " + heartbeat + ", debug " + debug + ")");
-
+            StartServer();
+            
             bool runForever = true;
             List<BigQClient> clients;
+            List<BigQUser> users;
+            List<BigQPermission> perms;
 
             while (runForever)
             {
@@ -70,11 +65,17 @@ namespace BigQChat
                     case "?":
                         Console.WriteLine("-------------------------------------------------------------------------------");
                         Console.WriteLine("Menu");
-                        Console.WriteLine("  q      quit");
-                        Console.WriteLine("  cls    clear screen");
-                        Console.WriteLine("  who    list connected users");
-                        Console.WriteLine("  count  show server connection count");
+                        Console.WriteLine("  q       quit");
+                        Console.WriteLine("  cls     clear screen");
+                        Console.WriteLine("  who     list connected users");
+                        Console.WriteLine("  count   show server connection count");
+                        Console.WriteLine("  debug   enable/disable console debug (currently " + server.ConsoleDebug + ")");
+                        Console.WriteLine("  auth    display users.json and permissions.json authorization");
                         Console.WriteLine("");
+                        break;
+
+                    case "q":
+                        runForever = false;
                         break;
 
                     case "c":
@@ -100,8 +101,44 @@ namespace BigQChat
                         Console.WriteLine("Server connection count: " + server.ConnectionCount());
                         break;
 
-                    case "q":
-                        runForever = false;
+                    case "debug":
+                        server.ConsoleDebug = !server.ConsoleDebug;
+                        break;
+
+                    case "auth":
+                        Console.WriteLine("users.json");
+                        users = server.ListCurrentUsersFile();
+                        if (users != null && users.Count > 0)
+                        {
+                            foreach (BigQUser curr in users)
+                            {
+                                string userEntry = "  " + curr.Email + " " + curr.Password + " " + curr.Permission + " IP: ";
+                                if (curr.IPWhiteList != null && curr.IPWhiteList.Count > 0)
+                                {
+                                    foreach (string currIP in curr.IPWhiteList) userEntry += currIP + " ";
+                                }
+                                else userEntry += "*";
+                                Console.WriteLine(userEntry);
+                            }
+                        }
+                        else Console.WriteLine("(null)");
+
+                        Console.WriteLine("permissions.json");
+                        perms = server.ListCurrentPermissionsFile();
+                        if (perms != null && perms.Count > 0)
+                        {
+                            foreach (BigQPermission curr in perms)
+                            {
+                                string permEntry = "  " + curr.Name + " Login: " + curr.Login + " Allowed: ";
+                                if (curr.Permissions != null && curr.Permissions.Count > 0)
+                                {
+                                    foreach (string currPerm in curr.Permissions) permEntry += currPerm + " ";
+                                }
+                                else permEntry += "*";
+                                Console.WriteLine(permEntry);
+                            }
+                        }
+                        else Console.WriteLine("(null)");
                         break;
 
                     default:
@@ -118,19 +155,36 @@ namespace BigQChat
             return true;
         }
 
-        static bool ServerStopped()
+        static bool StartServer()
         {
-            // restart
-            Console.WriteLine("*** Server stopped, attempting to restart ***");
-            
-            server = new BigQServer(null, port, null, 8223, debug, true, true, true, heartbeat);
-            server.MessageReceived = MessageReceived;
-            server.ServerStopped = ServerStopped;
-            server.ClientConnected = ClientConnected;
-            server.ClientLogin = ClientLogin;
-            server.ClientDisconnected = ClientDisconnected;
-            // server.LogMessage = LogMessage;
-            return true;
+            while (true)
+            {
+                try
+                {
+                    Console.WriteLine("Attempting to start server...");
+
+                    server = new BigQServer(null, port, null, 8223, debug, true, true, true, heartbeat);
+                    server.LogLockMethodResponseTime = false;
+                    server.LogMessageResponseTime = false;
+
+                    server.MessageReceived = MessageReceived;
+                    server.ServerStopped = StartServer;
+                    server.ClientConnected = ClientConnected;
+                    server.ClientLogin = ClientLogin;
+                    server.ClientDisconnected = ClientDisconnected;
+                    // server.LogMessage = LogMessage;
+
+                    Console.WriteLine("Listening on TCP/" + port + " (heartbeat " + heartbeat + ", debug " + debug + ")");
+
+                    return true;
+                }
+                catch (Exception EOuter)
+                {
+                    Console.WriteLine("*** Exception while attempting to start server: " + EOuter.Message);
+                    Console.WriteLine("*** Retrying in five seconds");
+                    Thread.Sleep(5000);
+                }
+            }
         }
 
         static bool ClientConnected(BigQClient client)

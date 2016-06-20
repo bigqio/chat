@@ -160,6 +160,7 @@ namespace BigQChatClient
                             Console.WriteLine("  cls                clear the screen");
                             Console.WriteLine("  whoami             show my TCP endpoint");
                             Console.WriteLine("  who                list all connected users");
+                            Console.WriteLine("  debug              enable/disable console debugging (currently " + client.ConsoleDebug + ")");
                             Console.WriteLine("  /(handle) (msg)    send message (msg) to user with handle (handle)");
                             Console.WriteLine("                     leave parentheses off for both handle and message data");
                             Console.WriteLine("");
@@ -219,6 +220,10 @@ namespace BigQChatClient
                             }
                             break;
 
+                        case "debug":
+                            client.ConsoleDebug = !client.ConsoleDebug;
+                            break;
+
                         default:
                             Console.WriteLine("Unknown command");
                             break;
@@ -252,65 +257,68 @@ namespace BigQChatClient
 
         static bool ConnectToServer()
         {
-            Stopwatch connectSw = new Stopwatch();
-            long connectSwMs = 0;
-            Stopwatch loginSw = new Stopwatch();
-            long loginSwMs = 0;
-
-            try
+            while (true)
             {
-                Console.WriteLine("Attempting to connect to " + server + ":" + port);
-                if (client != null) client.Close();
-                client = null;
+                Stopwatch connectSw = new Stopwatch();
+                long connectSwMs = 0;
+                Stopwatch loginSw = new Stopwatch();
+                long loginSwMs = 0;
 
-                connectSw.Start();
-                client = new BigQClient(name, name, server, port, 10000, heartbeat, debug);
-                connectSw.Stop();
-                connectSwMs = connectSw.ElapsedMilliseconds;
-
-                client.AsyncMessageReceived = AsyncMessageReceived;
-                client.SyncMessageReceived = SyncMessageReceived;
-                client.ServerDisconnected = ConnectToServer;
-                // client.LogMessage = LogMessage;
-                Console.WriteLine("Successfully connected to " + server + ":" + port + " (" + connectSwMs + "ms)");
-
-                Console.WriteLine("Attempting login to " + server + ":" + port);
-                BigQMessage response;
-
-                loginSw.Start();
-                if (!client.Login(out response))
+                try
                 {
-                    Console.WriteLine("Unable to login, retrying in five seconds");
-                    Thread.Sleep(5000);
-                    return ConnectToServer();
-                }
-                loginSw.Stop();
-                loginSwMs = loginSw.ElapsedMilliseconds;
+                    Console.WriteLine("Attempting to connect to " + server + ":" + port);
+                    if (client != null) client.Close();
+                    client = null;
 
-                Console.WriteLine("Successfully logged into " + server + ":" + port + " (" + loginSwMs + "ms)");
-                return true;
-            }
-            catch (SocketException)
-            {
-                Console.WriteLine("*** Unable to connect to " + server + ":" + port + " (port not reachable)");
-                Console.WriteLine("*** Retrying in five seconds");
-                Thread.Sleep(5000);
-                return ConnectToServer();
-            }
-            catch (TimeoutException)
-            {
-                Console.WriteLine("*** Timeout connecting to " + server + ":" + port);
-                Console.WriteLine("*** Retrying in five seconds");
-                Thread.Sleep(5000);
-                return ConnectToServer();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("*** Unable to connect to " + server + ":" + port + " due to the following exception:");
-                PrintException("ConnectToServer", e);
-                Console.WriteLine("*** Retrying in five seconds");
-                Thread.Sleep(5000);
-                return ConnectToServer();                
+                    connectSw.Start();
+                    client = new BigQClient(name, name, server, port, 10000, heartbeat, debug);
+                    connectSw.Stop();
+                    connectSwMs = connectSw.ElapsedMilliseconds;
+
+                    client.ConsoleDebug = false;
+                    client.LogMessageResponseTime = false;
+                    client.AsyncMessageReceived = AsyncMessageReceived;
+                    client.SyncMessageReceived = SyncMessageReceived;
+                    client.ServerDisconnected = ConnectToServer;
+                    // client.LogMessage = LogMessage;
+
+                    Console.WriteLine("Successfully connected to " + server + ":" + port + " (" + connectSwMs + "ms)");
+
+                    Console.WriteLine("Attempting login to " + server + ":" + port);
+                    BigQMessage response;
+
+                    loginSw.Start();
+                    if (!client.Login(out response))
+                    {
+                        Console.WriteLine("Unable to login, retrying in five seconds");
+                        Thread.Sleep(5000);
+                        return ConnectToServer();
+                    }
+                    loginSw.Stop();
+                    loginSwMs = loginSw.ElapsedMilliseconds;
+
+                    Console.WriteLine("Successfully logged into " + server + ":" + port + " (" + loginSwMs + "ms)");
+                    return true;
+                }
+                catch (SocketException)
+                {
+                    Console.WriteLine("*** Unable to connect to " + server + ":" + port + " (port not reachable)");
+                    Console.WriteLine("*** Retrying in five seconds");
+                    Thread.Sleep(5000);
+                }
+                catch (TimeoutException)
+                {
+                    Console.WriteLine("*** Timeout connecting to " + server + ":" + port);
+                    Console.WriteLine("*** Retrying in five seconds");
+                    Thread.Sleep(5000);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("*** Unable to connect to " + server + ":" + port + " due to the following exception:");
+                    PrintException("ConnectToServer", e);
+                    Console.WriteLine("*** Retrying in five seconds");
+                    Thread.Sleep(5000);
+                }
             }
         }
 
