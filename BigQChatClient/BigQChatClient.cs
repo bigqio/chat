@@ -13,87 +13,17 @@ namespace BigQChatClient
 {
     class BigQChatClient
     {
-        static int port = 8222;
-        static string server = "chat.bigq.io";
-        static string name = "";
-        static BigQClient client;
-        static BigQMessage response;
-        static List<BigQClient> users;
-        static int heartbeat = 0;
-        static bool debug = false;
+        static string config;
+        static Client client;
+        static Message response;
+        static List<Client> users;
         
         static void Main(string[] args)
         {
-            Console.Clear();
-            Console.WriteLine("");
-            Console.WriteLine("");
-
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine(@" $$\       $$\                      ");
-            Console.WriteLine(@" $$ |      \__|                     ");
-            Console.WriteLine(@" $$$$$$$\  $$\  $$$$$$\   $$$$$$\   ");
-            Console.WriteLine(@" $$  __$$\ $$ |$$  __$$\ $$  __$$\  ");
-            Console.WriteLine(@" $$ |  $$ |$$ |$$ /  $$ |$$ /  $$ | ");
-            Console.WriteLine(@" $$ |  $$ |$$ |$$ |  $$ |$$ |  $$ | ");
-            Console.WriteLine(@" $$$$$$$  |$$ |\$$$$$$$ |\$$$$$$$ | ");
-            Console.WriteLine(@" \_______/ \__| \____$$ | \____$$ | ");
-            Console.WriteLine(@"               $$\   $$ |      $$ | ");
-            Console.WriteLine(@"               \$$$$$$  |      $$ | ");
-            Console.WriteLine(@"                \______/       \__| ");
-            Console.ResetColor();
-
-            Console.WriteLine("");
-            Console.WriteLine("");
-            Console.WriteLine("BigQ Chat Client");
-            Console.WriteLine("");
-
-            if (GetArguments(args, out server, out port, out name, out heartbeat, out debug))
-            {
-                Console.WriteLine("Using server " + server + ":" + port + " as user " + name + " (heartbeat " + heartbeat + ", debug " + debug + ")");
-            }
-            else
-            {
-                Console.Write("Server IP or hostname [ENTER for chat.bigq.io]: ");
-                server = Console.ReadLine();
-                if (String.IsNullOrEmpty(server)) server = "chat.bigq.io";
-
-                while (true)
-                {
-                    Console.Write("Port number [ENTER for 8222]: ");
-                    string portString = Console.ReadLine();
-                    if (String.IsNullOrEmpty(portString))
-                    {
-                        port = 8222;
-                        break;
-                    }
-
-                    if (!Int32.TryParse(portString, out port))
-                    {
-                        Console.WriteLine("Positive numbers only, please");
-                        continue;
-                    }
-
-                    if (port < 1)
-                    {
-                        Console.WriteLine("Positive numbers only, please");
-                        continue;
-                    }
-
-                    break;
-                }
-           
-                while (true)
-                {
-                    Console.Write("Nickname [no spaces please]: ");
-                    name = Console.ReadLine();
-                    if (String.IsNullOrEmpty(name)) continue;
-                    break;
-                }
-            }
-
+            if (args != null && args.Length == 1) config = args[0];
+            else config = null;
 
             ConnectToServer();
-
             bool runForever = true;
             while (runForever)
             {
@@ -160,7 +90,7 @@ namespace BigQChatClient
                             Console.WriteLine("  cls                clear the screen");
                             Console.WriteLine("  whoami             show my TCP endpoint");
                             Console.WriteLine("  who                list all connected users");
-                            Console.WriteLine("  debug              enable/disable console debugging (currently " + client.ConsoleDebug + ")");
+                            Console.WriteLine("  debug              enable/disable console debugging (currently " + client.Config.Debug.Enable + ")");
                             Console.WriteLine("  /(handle) (msg)    send message (msg) to user with handle (handle)");
                             Console.WriteLine("                     leave parentheses off for both handle and message data");
                             Console.WriteLine("");
@@ -191,7 +121,7 @@ namespace BigQChatClient
                         case "whoami":
                             if (client == null) break;
                             Console.Write(client.IpPort());
-                            if (!String.IsNullOrEmpty(client.ClientGuid)) Console.WriteLine("  GUID " + client.ClientGuid);
+                            if (!String.IsNullOrEmpty(client.ClientGUID)) Console.WriteLine("  GUID " + client.ClientGUID);
                             else Console.WriteLine("[not logged in]");
                             break;
 
@@ -209,19 +139,19 @@ namespace BigQChatClient
                                 }
                                 else
                                 {
-                                    List<BigQClient> deduped = users.Distinct().ToList();
+                                    List<Client> deduped = users.Distinct().ToList();
 
                                     Console.WriteLine("Connected users:");
-                                    foreach (BigQClient curr in deduped)
+                                    foreach (Client curr in deduped)
                                     {
-                                        Console.WriteLine("  " + curr.ClientGuid);
+                                        Console.WriteLine("  " + curr.IpPort() + "  " + curr.ClientGUID + "  " + curr.Email);
                                     }
                                 }
                             }
                             break;
 
                         case "debug":
-                            client.ConsoleDebug = !client.ConsoleDebug;
+                            client.Config.Debug.Enable = !client.Config.Debug.Enable;
                             break;
 
                         default:
@@ -232,7 +162,7 @@ namespace BigQChatClient
             }
         }
         
-        static bool AsyncMessageReceived(BigQMessage msg)
+        static bool AsyncMessageReceived(Message msg)
         {
             if (msg == null) return false;
             if (msg.Data == null) return false;
@@ -241,7 +171,7 @@ namespace BigQChatClient
             return true;
         }
 
-        static byte[] SyncMessageReceived(BigQMessage msg)
+        static byte[] SyncMessageReceived(Message msg)
         {
             if (msg == null) return null;
             if (msg.Data == null) return null;
@@ -266,26 +196,24 @@ namespace BigQChatClient
 
                 try
                 {
-                    Console.WriteLine("Attempting to connect to " + server + ":" + port);
+                    Console.WriteLine("Attempting to connect to server");
                     if (client != null) client.Close();
                     client = null;
 
                     connectSw.Start();
-                    client = new BigQClient(name, name, server, port, 10000, heartbeat, debug);
+                    client = new Client(config);
                     connectSw.Stop();
                     connectSwMs = connectSw.ElapsedMilliseconds;
 
-                    client.ConsoleDebug = false;
-                    client.LogMessageResponseTime = false;
                     client.AsyncMessageReceived = AsyncMessageReceived;
                     client.SyncMessageReceived = SyncMessageReceived;
                     client.ServerDisconnected = ConnectToServer;
                     // client.LogMessage = LogMessage;
 
-                    Console.WriteLine("Successfully connected to " + server + ":" + port + " (" + connectSwMs + "ms)");
+                    Console.WriteLine("Successfully connected to server");
 
-                    Console.WriteLine("Attempting login to " + server + ":" + port);
-                    BigQMessage response;
+                    Console.WriteLine("Attempting login");
+                    Message response;
 
                     loginSw.Start();
                     if (!client.Login(out response))
@@ -297,24 +225,24 @@ namespace BigQChatClient
                     loginSw.Stop();
                     loginSwMs = loginSw.ElapsedMilliseconds;
 
-                    Console.WriteLine("Successfully logged into " + server + ":" + port + " (" + loginSwMs + "ms)");
+                    Console.WriteLine("Successfully logged into server (" + loginSwMs + "ms)");
                     return true;
                 }
                 catch (SocketException)
                 {
-                    Console.WriteLine("*** Unable to connect to " + server + ":" + port + " (port not reachable)");
+                    Console.WriteLine("*** Unable to connect to server (port not reachable)");
                     Console.WriteLine("*** Retrying in five seconds");
                     Thread.Sleep(5000);
                 }
                 catch (TimeoutException)
                 {
-                    Console.WriteLine("*** Timeout connecting to " + server + ":" + port);
+                    Console.WriteLine("*** Timeout connecting to server");
                     Console.WriteLine("*** Retrying in five seconds");
                     Thread.Sleep(5000);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("*** Unable to connect to " + server + ":" + port + " due to the following exception:");
+                    Console.WriteLine("*** Unable to connect to server due to the following exception:");
                     PrintException("ConnectToServer", e);
                     Console.WriteLine("*** Retrying in five seconds");
                     Thread.Sleep(5000);
@@ -339,53 +267,6 @@ namespace BigQChatClient
             Console.WriteLine(" = Exception Source: " + e.Source);
             Console.WriteLine(" = Exception StackTrace: " + e.StackTrace);
             Console.WriteLine("================================================================================");
-        }
-
-        static bool GetArguments(string[] args, out string host, out int port, out string name, out int heartbeat, out bool debug)
-        {
-            host = null;
-            port = 0;
-            name = null;
-            heartbeat = 0;
-            debug = false;
-
-            if (args == null || args.Length != 5) return false;
-
-            host = args[0];
-
-            try
-            {
-                port = Convert.ToInt32(args[1]);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Invalid port number specified on command line");
-                return false;
-            }
-
-            name = args[2];
-
-            try
-            {
-                heartbeat = Convert.ToInt32(args[3]);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Invalid heartbeat interval specified on command line");
-                return false;
-            }
-
-            try
-            {
-                debug = Convert.ToBoolean(args[4]);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Invalid value for debug");
-                return false;
-            }
-
-            return true;            
         }
     }
 }
