@@ -167,7 +167,7 @@ namespace BigQChatClient
             if (msg == null) return false;
             if (msg.Data == null) return false;
 
-            Console.WriteLine(msg.SenderGuid + " -> " + msg.RecipientGuid + ": " + Encoding.UTF8.GetString(msg.Data));
+            Console.WriteLine(msg.SenderGUID + " -> " + msg.RecipientGUID + ": " + Encoding.UTF8.GetString(msg.Data));
             return true;
         }
 
@@ -176,13 +176,25 @@ namespace BigQChatClient
             if (msg == null) return null;
             if (msg.Data == null) return null;
 
-            Console.WriteLine("Received synchronous message from " + msg.SenderGuid);
+            Console.WriteLine("Received synchronous message from " + msg.SenderGUID);
             Console.WriteLine(Encoding.UTF8.GetString(msg.Data));
             Console.WriteLine("Press ENTER to take control of the console and then type your response");
             Console.Write("Response [ENTER for 'received!']: ");
             string resp = Console.ReadLine();
             if (String.IsNullOrEmpty(resp)) return null;
             return Encoding.UTF8.GetBytes(resp);
+        }
+
+        static bool ClientJoinedServer(string clientGuid)
+        {
+            Console.WriteLine("Client " + clientGuid + " joined the server");
+            return true;
+        }
+
+        static bool ClientLeftServer(string clientGuid)
+        {
+            Console.WriteLine("Client " + clientGuid + " left the server");
+            return true;
         }
 
         static bool ConnectToServer()
@@ -208,6 +220,12 @@ namespace BigQChatClient
                     client.AsyncMessageReceived = AsyncMessageReceived;
                     client.SyncMessageReceived = SyncMessageReceived;
                     client.ServerDisconnected = ConnectToServer;
+                    client.ClientJoinedServer = ClientJoinedServer;
+                    client.ClientLeftServer = ClientLeftServer;
+                    client.ClientJoinedChannel = null;          // not implemented in this app
+                    client.ClientLeftChannel = null;            // not implemented in this app
+                    client.SubscriberJoinedChannel = null;      // not implemented in this app
+                    client.SubscriberLeftChannel = null;        // not implemented in this app
                     // client.LogMessage = LogMessage;
 
                     Console.WriteLine("Successfully connected to server");

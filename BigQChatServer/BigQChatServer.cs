@@ -120,7 +120,7 @@ namespace BigQChat
 
         static bool MessageReceived(Message msg)
         {
-            Console.WriteLine(msg.SenderGuid + " -> " + msg.RecipientGuid + ": " + Encoding.UTF8.GetString(msg.Data));
+            Console.WriteLine(msg.SenderGUID + " -> " + msg.RecipientGUID + ": " + Encoding.UTF8.GetString(msg.Data));
             return true;
         }
         
