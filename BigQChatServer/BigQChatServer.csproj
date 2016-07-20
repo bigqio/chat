@@ -34,18 +34,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BigQ, Version=1.4.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BigQ.dll.1.4.3\lib\BigQ.dll</HintPath>
+    <Reference Include="BigQ, Version=1.4.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BigQ.dll.1.4.4\lib\BigQ.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Portable, Version=4.0.0.0, Culture=neutral, PublicKeyToken=59e704a76bc4613a, processorArchitecture=MSIL">
-      <HintPath>..\packages\BigQ.dll.1.4.3\lib\System.Data.Portable.dll</HintPath>
+      <HintPath>..\packages\BigQ.dll.1.4.4\lib\System.Data.Portable.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Transactions.Portable, Version=4.0.0.0, Culture=neutral, PublicKeyToken=59e704a76bc4613a, processorArchitecture=MSIL">
-      <HintPath>..\packages\BigQ.dll.1.4.3\lib\System.Transactions.Portable.dll</HintPath>
+      <HintPath>..\packages\BigQ.dll.1.4.4\lib\System.Transactions.Portable.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
