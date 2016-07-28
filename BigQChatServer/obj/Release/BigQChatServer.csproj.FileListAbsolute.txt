@@ -35,6 +35,5 @@ D:\Code\BigQ\BigQChat-CSharp\BigQChatServer\bin\Release\BigQ.dll
 D:\Code\BigQ\BigQChat-CSharp\BigQChatServer\bin\Release\System.Data.Portable.dll
 D:\Code\BigQ\BigQChat-CSharp\BigQChatServer\bin\Release\System.Transactions.Portable.dll
 D:\Code\BigQ\BigQChat-CSharp\BigQChatServer\bin\Release\BigQ.pdb
-D:\Code\BigQ\BigQChat-CSharp\BigQChatServer\obj\Release\BigQChatServer.csprojResolveAssemblyReference.cache
 D:\Code\BigQ\BigQChat-CSharp\BigQChatServer\obj\Release\BigQChatServer.exe
 D:\Code\BigQ\BigQChat-CSharp\BigQChatServer\obj\Release\BigQChatServer.pdb

@@ -197,6 +197,12 @@ namespace BigQChatClient
             return true;
         }
 
+        static bool ServerConnected()
+        {
+            Console.WriteLine("Server connected");
+            return true;
+        }
+
         static bool ConnectToServer()
         {
             while (true)
@@ -220,6 +226,7 @@ namespace BigQChatClient
                     client.AsyncMessageReceived = AsyncMessageReceived;
                     client.SyncMessageReceived = SyncMessageReceived;
                     client.ServerDisconnected = ConnectToServer;
+                    client.ServerConnected = ServerConnected;
                     client.ClientJoinedServer = ClientJoinedServer;
                     client.ClientLeftServer = ClientLeftServer;
                     client.ClientJoinedChannel = null;          // not implemented in this app
