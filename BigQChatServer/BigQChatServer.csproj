@@ -34,8 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BigQ, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BigQ.dll.1.5.0\lib\BigQ.dll</HintPath>
+    <Reference Include="BigQ, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BigQ.dll.1.6.0\lib\BigQ.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -45,11 +45,11 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Portable, Version=4.0.0.0, Culture=neutral, PublicKeyToken=59e704a76bc4613a, processorArchitecture=MSIL">
-      <HintPath>..\packages\BigQ.dll.1.5.0\lib\System.Data.Portable.dll</HintPath>
+      <HintPath>..\packages\BigQ.dll.1.6.0\lib\System.Data.Portable.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Transactions.Portable, Version=4.0.0.0, Culture=neutral, PublicKeyToken=59e704a76bc4613a, processorArchitecture=MSIL">
-      <HintPath>..\packages\BigQ.dll.1.5.0\lib\System.Transactions.Portable.dll</HintPath>
+      <HintPath>..\packages\BigQ.dll.1.6.0\lib\System.Transactions.Portable.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />

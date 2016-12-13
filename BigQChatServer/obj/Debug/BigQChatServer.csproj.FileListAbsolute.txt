@@ -41,3 +41,4 @@ D:\Code\BigQ\BigQChat-CSharp\BigQChatServer\bin\Debug\BigQ.pdb
 D:\Code\BigQ\BigQChat-CSharp\BigQChatServer\bin\Debug\Newtonsoft.Json.xml
 D:\Code\BigQ\BigQChat-CSharp\BigQChatServer\obj\Debug\BigQChatServer.exe
 D:\Code\BigQ\BigQChat-CSharp\BigQChatServer\obj\Debug\BigQChatServer.pdb
+D:\code\bigq\BigQChat-CSharp\BigQChatServer\obj\Debug\BigQChatServer.csprojResolveAssemblyReference.cache
