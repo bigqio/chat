@@ -244,7 +244,7 @@ namespace BigQChatClient
                     if (!client.Login(out response))
                     {
                         Console.WriteLine("Unable to login, retrying in five seconds");
-                        Thread.Sleep(5000);
+                        Task.Delay(5000).Wait();
                         return ConnectToServer();
                     }
                     loginSw.Stop();
@@ -257,20 +257,20 @@ namespace BigQChatClient
                 {
                     Console.WriteLine("*** Unable to connect to server (port not reachable)");
                     Console.WriteLine("*** Retrying in five seconds");
-                    Thread.Sleep(5000);
+                    Task.Delay(5000).Wait();
                 }
                 catch (TimeoutException)
                 {
                     Console.WriteLine("*** Timeout connecting to server");
                     Console.WriteLine("*** Retrying in five seconds");
-                    Thread.Sleep(5000);
+                    Task.Delay(5000).Wait();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("*** Unable to connect to server due to the following exception:");
                     PrintException("ConnectToServer", e);
                     Console.WriteLine("*** Retrying in five seconds");
-                    Thread.Sleep(5000);
+                    Task.Delay(5000).Wait();
                 }
             }
         }

@@ -148,7 +148,7 @@ namespace BigQChat
                 {
                     Console.WriteLine("*** Exception while attempting to start server: " + EOuter.Message);
                     Console.WriteLine("*** Retrying in five seconds");
-                    Thread.Sleep(5000);
+                    Task.Delay(5000).Wait();
                 }
             }
         }
