@@ -37,7 +37,6 @@ namespace BigQChat
                         Console.WriteLine("  q       quit");
                         Console.WriteLine("  cls     clear screen");
                         Console.WriteLine("  who     list connected users");
-                        Console.WriteLine("  count   show server connection count");
                         Console.WriteLine("  debug   enable/disable console debug (currently " + server.Config.Debug.Enable + ")");
                         Console.WriteLine("  auth    display users.json and permissions.json authorization");
                         Console.WriteLine("");
@@ -61,15 +60,11 @@ namespace BigQChat
                             Console.WriteLine(clients.Count + " clients connected");
                             foreach (Client curr in clients)
                             {
-                                Console.WriteLine("  " + curr.IpPort() + "  " + curr.ClientGUID + "  " + curr.Email);
+                                Console.WriteLine("  " + curr.IpPort + "  " + curr.ClientGUID + "  " + curr.Email);
                             }
                         }
                         break;
-
-                    case "count":
-                        Console.WriteLine("Server connection count: " + server.ConnectionCount());
-                        break;
-
+                         
                     case "debug":
                         server.Config.Debug.Enable = !server.Config.Debug.Enable;
                         break;
@@ -156,21 +151,21 @@ namespace BigQChat
         static bool ClientConnected(Client client)
         {
             // client connected
-            Console.WriteLine("*** Client connected: " + client.IpPort() + " " + client.ClientGUID);
+            Console.WriteLine("*** Client connected: " + client.IpPort + " " + client.ClientGUID);
             return true;
         }
 
         static bool ClientLogin(Client client)
         {
             // client login
-            Console.WriteLine("*** Client login: " + client.IpPort() + " " + client.ClientGUID);
+            Console.WriteLine("*** Client login: " + client.IpPort + " " + client.ClientGUID);
             return true;
         }
 
         static bool ClientDisconnected(Client client)
         {
             // client disconnected
-            Console.WriteLine("*** Client disconnected: " + client.IpPort() + " " + client.ClientGUID);
+            Console.WriteLine("*** Client disconnected: " + client.IpPort + " " + client.ClientGUID);
             return true;
         }
 

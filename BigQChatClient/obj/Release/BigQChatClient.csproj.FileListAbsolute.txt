@@ -33,10 +33,14 @@ D:\Code\BigQ\BigQChat-CSharp\BigQChatClient\bin\Release\BigQChatClient.exe
 D:\Code\BigQ\BigQChat-CSharp\BigQChatClient\bin\Release\BigQChatClient.pdb
 D:\Code\BigQ\BigQChat-CSharp\BigQChatClient\bin\Release\BigQ.dll
 D:\Code\BigQ\BigQChat-CSharp\BigQChatClient\bin\Release\Newtonsoft.Json.dll
-D:\Code\BigQ\BigQChat-CSharp\BigQChatClient\bin\Release\System.Data.Portable.dll
-D:\Code\BigQ\BigQChat-CSharp\BigQChatClient\bin\Release\System.Transactions.Portable.dll
 D:\Code\BigQ\BigQChat-CSharp\BigQChatClient\bin\Release\BigQ.pdb
 D:\Code\BigQ\BigQChat-CSharp\BigQChatClient\bin\Release\Newtonsoft.Json.xml
 D:\Code\BigQ\BigQChat-CSharp\BigQChatClient\obj\Release\BigQChatClient.csprojResolveAssemblyReference.cache
 D:\Code\BigQ\BigQChat-CSharp\BigQChatClient\obj\Release\BigQChatClient.exe
 D:\Code\BigQ\BigQChat-CSharp\BigQChatClient\obj\Release\BigQChatClient.pdb
+D:\code\bigq\BigQChat-CSharp\BigQChatClient\bin\Release\SyslogLogging.dll
+D:\code\bigq\BigQChat-CSharp\BigQChatClient\bin\Release\WatsonTcp.dll
+D:\code\bigq\BigQChat-CSharp\BigQChatClient\bin\Release\WatsonWebsocket.dll
+D:\code\bigq\BigQChat-CSharp\BigQChatClient\bin\Release\SyslogLogging.pdb
+D:\code\bigq\BigQChat-CSharp\BigQChatClient\bin\Release\WatsonTcp.pdb
+D:\code\bigq\BigQChat-CSharp\BigQChatClient\bin\Release\WatsonWebsocket.pdb

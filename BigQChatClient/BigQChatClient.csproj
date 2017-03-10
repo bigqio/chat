@@ -36,30 +36,34 @@
     <CodeAnalysisRuleSet>BigQChatClient.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BigQ, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BigQ.dll.1.6.1\lib\BigQ.dll</HintPath>
+    <Reference Include="BigQ, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BigQ.dll.1.7.0\lib\BigQ.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SyslogLogging, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SyslogLogging.1.0.8\lib\SyslogLogging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Portable, Version=4.0.0.0, Culture=neutral, PublicKeyToken=59e704a76bc4613a, processorArchitecture=MSIL">
-      <HintPath>..\packages\BigQ.dll.1.6.1\lib\System.Data.Portable.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Transactions.Portable, Version=4.0.0.0, Culture=neutral, PublicKeyToken=59e704a76bc4613a, processorArchitecture=MSIL">
-      <HintPath>..\packages\BigQ.dll.1.6.1\lib\System.Transactions.Portable.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WatsonTcp, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BigQ.dll.1.7.0\lib\WatsonTcp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WatsonWebsocket, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BigQ.dll.1.7.0\lib\WatsonWebsocket.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BigQChatClient.cs" />
