@@ -88,6 +88,7 @@ namespace BigQChatClient
                             Console.WriteLine("Available Commands:");
                             Console.WriteLine("  q                  quit");
                             Console.WriteLine("  cls                clear the screen");
+                            Console.WriteLine("  connect            connect to the server");
                             Console.WriteLine("  whoami             show my TCP endpoint");
                             Console.WriteLine("  who                list all connected users");
                             Console.WriteLine("  /(handle) (msg)    send message (msg) to user with handle (handle)");
@@ -103,6 +104,21 @@ namespace BigQChatClient
                         case "c":
                         case "cls":
                             Console.Clear();
+                            break;
+
+                        case "connect":
+                            if (client == null)
+                            {
+                                ConnectToServer();
+                            }
+                            else if (!client.Connected)
+                            {
+                                ConnectToServer();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Already connected");
+                            }
                             break;
 
                         case "login":
@@ -198,6 +214,12 @@ namespace BigQChatClient
             return true;
         }
 
+        static bool ServerDisconnected()
+        {
+            if (client != null) client.Dispose();
+            return true;
+        }
+
         static bool ConnectToServer()
         {
             while (true)
@@ -220,7 +242,7 @@ namespace BigQChatClient
 
                     client.AsyncMessageReceived = AsyncMessageReceived;
                     client.SyncMessageReceived = SyncMessageReceived;
-                    client.ServerDisconnected = ConnectToServer;
+                    client.ServerDisconnected = ServerDisconnected;
                     client.ServerConnected = ServerConnected;
                     client.ClientJoinedServer = ClientJoinedServer;
                     client.ClientLeftServer = ClientLeftServer;
@@ -238,34 +260,28 @@ namespace BigQChatClient
                     loginSw.Start();
                     if (!client.Login(out response))
                     {
-                        Console.WriteLine("Unable to login, retrying in five seconds");
-                        Task.Delay(5000).Wait();
-                        return ConnectToServer();
+                        Console.WriteLine("Unable to login");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Successfully logged into server (" + loginSwMs + "ms)");
                     }
                     loginSw.Stop();
                     loginSwMs = loginSw.ElapsedMilliseconds;
-
-                    Console.WriteLine("Successfully logged into server (" + loginSwMs + "ms)");
                     return true;
                 }
                 catch (SocketException)
                 {
                     Console.WriteLine("*** Unable to connect to server (port not reachable)");
-                    Console.WriteLine("*** Retrying in five seconds");
-                    Task.Delay(5000).Wait();
                 }
                 catch (TimeoutException)
                 {
                     Console.WriteLine("*** Timeout connecting to server");
-                    Console.WriteLine("*** Retrying in five seconds");
-                    Task.Delay(5000).Wait();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("*** Unable to connect to server due to the following exception:");
                     PrintException("ConnectToServer", e);
-                    Console.WriteLine("*** Retrying in five seconds");
-                    Task.Delay(5000).Wait();
                 }
             }
         }

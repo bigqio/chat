@@ -45,3 +45,5 @@ D:\code\bigq\BigQChat-CSharp\BigQChatClient\bin\Debug\WatsonWebsocket.dll
 D:\code\bigq\BigQChat-CSharp\BigQChatClient\bin\Debug\SyslogLogging.pdb
 D:\code\bigq\BigQChat-CSharp\BigQChatClient\bin\Debug\WatsonTcp.pdb
 D:\code\bigq\BigQChat-CSharp\BigQChatClient\bin\Debug\WatsonWebsocket.pdb
+D:\Code\BigQ\BigQChat-CSharp\BigQChatClient\bin\Debug\System.Data.Portable.dll
+D:\Code\BigQ\BigQChat-CSharp\BigQChatClient\bin\Debug\System.Transactions.Portable.dll
