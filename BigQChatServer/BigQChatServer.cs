@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using BigQ;
+using BigQ.Core;
+using BigQ.Server;
 
 namespace BigQChat
 {
@@ -12,7 +13,7 @@ namespace BigQChat
     {
         static string config;
         static Server server;
-        static List<Client> clients;
+        static List<ServerClient> clients;
         static List<User> users;
         static List<Permission> perms;
 
@@ -58,7 +59,7 @@ namespace BigQChat
                         else
                         {
                             Console.WriteLine(clients.Count + " clients connected");
-                            foreach (Client curr in clients)
+                            foreach (ServerClient curr in clients)
                             {
                                 Console.WriteLine("  " + curr.IpPort + "  " + curr.ClientGUID + "  " + curr.Email);
                             }
@@ -128,12 +129,12 @@ namespace BigQChat
                     Console.WriteLine("Attempting to start server...");
 
                     server = new Server(config);
-                    server.MessageReceived = MessageReceived;
-                    server.ServerStopped = StartServer;
-                    server.ClientConnected = ClientConnected;
-                    server.ClientLogin = ClientLogin;
-                    server.ClientDisconnected = ClientDisconnected;
-                    // server.LogMessage = LogMessage;
+                    server.Callbacks.MessageReceived = MessageReceived;
+                    server.Callbacks.ServerStopped = StartServer;
+                    server.Callbacks.ClientConnected = ClientConnected;
+                    server.Callbacks.ClientLogin = ClientLogin;
+                    server.Callbacks.ClientDisconnected = ClientDisconnected;
+                    // server.Callbacks.LogMessage = LogMessage;
 
                     Console.WriteLine("Server started");
 
@@ -148,21 +149,21 @@ namespace BigQChat
             }
         }
 
-        static bool ClientConnected(Client client)
+        static bool ClientConnected(ServerClient client)
         {
             // client connected
             Console.WriteLine("*** Client connected: " + client.IpPort + " " + client.ClientGUID);
             return true;
         }
 
-        static bool ClientLogin(Client client)
+        static bool ClientLogin(ServerClient client)
         {
             // client login
             Console.WriteLine("*** Client login: " + client.IpPort + " " + client.ClientGUID);
             return true;
         }
 
-        static bool ClientDisconnected(Client client)
+        static bool ClientDisconnected(ServerClient client)
         {
             // client disconnected
             Console.WriteLine("*** Client disconnected: " + client.IpPort + " " + client.ClientGUID);

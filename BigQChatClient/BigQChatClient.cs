@@ -7,7 +7,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using BigQ;
+using BigQ.Core;
+using BigQ.Client;
 
 namespace BigQChatClient
 {
@@ -16,7 +17,7 @@ namespace BigQChatClient
         static string config;
         static Client client;
         static Message response;
-        static List<Client> users;
+        static List<ServerClient> users;
         
         static void Main(string[] args)
         {
@@ -135,8 +136,7 @@ namespace BigQChatClient
 
                         case "whoami":
                             if (client == null) break;
-                            Console.Write(client.IpPort);
-                            if (!String.IsNullOrEmpty(client.ClientGUID)) Console.WriteLine("  GUID " + client.ClientGUID);
+                            if (!String.IsNullOrEmpty(client.Config.ClientGUID)) Console.WriteLine("  GUID " + client.Config.ClientGUID);
                             else Console.WriteLine("[not logged in]");
                             break;
 
@@ -154,10 +154,10 @@ namespace BigQChatClient
                                 }
                                 else
                                 {
-                                    List<Client> deduped = users.Distinct().ToList();
+                                    List<ServerClient> deduped = users.Distinct().ToList();
 
                                     Console.WriteLine("Connected users:");
-                                    foreach (Client curr in deduped)
+                                    foreach (ServerClient curr in deduped)
                                     {
                                         Console.WriteLine("  " + curr.IpPort + "  " + curr.ClientGUID + "  " + curr.Email);
                                     }
@@ -240,17 +240,17 @@ namespace BigQChatClient
                     connectSw.Stop();
                     connectSwMs = connectSw.ElapsedMilliseconds;
 
-                    client.AsyncMessageReceived = AsyncMessageReceived;
-                    client.SyncMessageReceived = SyncMessageReceived;
-                    client.ServerDisconnected = ServerDisconnected;
-                    client.ServerConnected = ServerConnected;
-                    client.ClientJoinedServer = ClientJoinedServer;
-                    client.ClientLeftServer = ClientLeftServer;
-                    client.ClientJoinedChannel = null;          // not implemented in this app
-                    client.ClientLeftChannel = null;            // not implemented in this app
-                    client.SubscriberJoinedChannel = null;      // not implemented in this app
-                    client.SubscriberLeftChannel = null;        // not implemented in this app
-                    // client.LogMessage = LogMessage;
+                    client.Callbacks.AsyncMessageReceived = AsyncMessageReceived;
+                    client.Callbacks.SyncMessageReceived = SyncMessageReceived;
+                    client.Callbacks.ServerDisconnected = ServerDisconnected;
+                    client.Callbacks.ServerConnected = ServerConnected;
+                    client.Callbacks.ClientJoinedServer = ClientJoinedServer;
+                    client.Callbacks.ClientLeftServer = ClientLeftServer;
+                    client.Callbacks.ClientJoinedChannel = null;          // not implemented in this app
+                    client.Callbacks.ClientLeftChannel = null;            // not implemented in this app
+                    client.Callbacks.SubscriberJoinedChannel = null;      // not implemented in this app
+                    client.Callbacks.SubscriberLeftChannel = null;        // not implemented in this app
+                    // client.Callbacks.LogMessage = LogMessage;
 
                     Console.WriteLine("Successfully connected to server");
 
